@@ -18,7 +18,7 @@ func quickFunc(arr []int) []int {
 
 func generateRandomArray() []int {
 	arr := make([]int, rand.Intn(100))
-	for i := 0; i < len(arr); i++ {
+	for i := range arr {
 		arr[i] = rand.Intn(100)
 	}
 	return arr
