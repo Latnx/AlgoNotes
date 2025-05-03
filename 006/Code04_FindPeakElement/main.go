@@ -13,6 +13,7 @@ func findPeakElement(nums []int) int {
 	if nums[n-1] > nums[n-2] {
 		return n - 1
 	}
+	// 如果左右都不是峰值的话，左侧是上升，右侧是下降，则必有一个峰值点
 	var l, r = 1, n - 2
 	for l <= r {
 		middle := (l + r) / 2
