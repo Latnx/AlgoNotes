@@ -25,20 +25,17 @@ func mergeKLists(lists []*ListNode) *ListNode {
 			lists[index] = list.Next
 		}
 	}
-	if h.Len() == 0 {
-		return nil
-	}
 	heap.Init(&h)
-	head := heap.Pop(&h).(*ListNode)
+	head := &ListNode{}
 	p := head
 	for len(h) > 0 {
+		p.Next = heap.Pop(&h).(*ListNode)
+		p = p.Next
 		if p.Next != nil {
 			heap.Push(&h, p.Next)
 		}
-		p.Next = heap.Pop(&h).(*ListNode)
-		p = p.Next
 	}
-	return head
+	return head.Next
 }
 
 func main() {
