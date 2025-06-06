@@ -1,0 +1,51 @@
+package main
+
+// https://leetcode.cn/problems/reverse-nodes-in-k-group/
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	if head == nil {
+		return nil
+	}
+	var res *ListNode = head
+	for i := k; i > 1 && res != nil; i-- {
+		res = res.Next
+	}
+	var pre *ListNode = &ListNode{}
+	for cur := head; cur != nil; cur = cur.Next {
+		pre.Next = reverse(cur, k)
+		pre = cur
+	}
+	return res
+}
+
+func reverse(head *ListNode, k int) *ListNode {
+	var pre, cur, next *ListNode = nil, head, nil
+	for k > 0 && cur != nil {
+		next = cur.Next
+		cur.Next = pre
+		pre = cur
+		cur = next
+		k--
+	}
+	head.Next = next
+
+	if k > 0 {
+		cur = pre
+		pre = next
+		for cur != nil {
+			next = cur.Next
+			cur.Next = pre
+			pre = cur
+			cur = next
+		}
+	}
+	return pre
+}
+
+func main() {
+	reverse(&ListNode{}, 3)
+}
