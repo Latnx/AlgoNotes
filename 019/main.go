@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 )
@@ -22,6 +21,12 @@ func main() {
 		arr[i], _ = strconv.Atoi(scanner.Text())
 	}
 	for i := range n {
-		fmt.Fprintln(writer, arr[i])
+		writer.WriteString(strconv.Itoa(arr[i]))
+		writer.WriteByte('\n')
 	}
 }
+
+// scanner 14ms
+// Scan 437ms
+// Fscan 77ms
+// reader 14ms
