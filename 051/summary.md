@@ -4,17 +4,33 @@
 3. 建立函数, 计算已知答案的情况下, 判断是否符合条件
 4. 在可能的答案上二分, 找到最终的答案
 ```go
-l, r := L, R
-ans := some_default
-for l <= r {
-    mid := (l + r) / 2
-    if check(mid) {   // mid 可行
-        ans = mid     // 保存答案
-        r = mid - 1   // 左移，找更小的可行值
+l, r := L, R        // 搜索区间 [l, r)
+for l < r {
+    mid := l + (r - l) / 2
+    if check(mid) {    // mid 可行
+        r = mid        // 保留 mid
     } else {
-        l = mid + 1   // mid 不可行，丢弃左区间
+        l = mid + 1
     }
 }
-return ans
+return l   // 或 r，二者相等
 
+```
+```go
+func binFindLess(arr []int, target int, len int) int {
+	l, r := 0, len-1
+	ans := -1
+
+	for l <= r {
+		mid := (l + r) / 2
+		if arr[mid] < target {
+			ans = mid
+			r = mid - 1 // 继续向左找
+		} else {
+			l = mid + 1
+		}
+	}
+
+	return ans
+}
 ```
