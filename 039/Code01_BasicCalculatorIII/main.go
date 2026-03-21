@@ -59,8 +59,9 @@ func calculator(s string) int {
 	numbers := []int{}
 	ops := []byte{}
 	cur := 0 //记录一个数字
-	for val := byte(0); i < len(s); i++ {
-		val = s[i]
+	for i < len(s) {
+		val := s[i]
+		i++
 		if val >= '0' && val <= '9' {
 			// 遇到数字就统计
 			cur = cur*10 + int(val) - int('0')
@@ -70,7 +71,6 @@ func calculator(s string) int {
 			cur = 0
 		} else if val == '(' {
 			// 左括号就入栈
-			i++
 			cur = calculator(s)
 		} else if val == ')' {
 			break

@@ -27,51 +27,48 @@ import (
 
 var index int
 
-// 对之前收集到的名字或者表进行结算
-func clear(curEle *[]byte, cur *int, m map[string]int, preMap *map[string]int) {
-	if *cur == 0 {
-		*cur = 1
+func parseName(formula string) string {
+	curEle := []byte{formula[index]}
+	index++
+	for index < len(formula) && formula[index] >= 'a' && formula[index] <= 'z' {
+		curEle = append(curEle, formula[index])
+		index++
 	}
-	// 来自哪个
-	if len(*curEle) > 0 {
-		eleName := string(*curEle)
-		m[eleName] += *cur
-	} else if len(*preMap) > 0 {
-		for k, v := range *preMap {
-			m[k] += v * (*cur)
-		}
+	return string(curEle)
+}
+
+func parseNum(formula string) int {
+	n := len(formula)
+	if index >= n || formula[index] < '0' || formula[index] > '9' {
+		return 1
 	}
-	*cur = 0
-	*preMap = make(map[string]int)
-	*curEle = []byte{}
+	num := 0
+	for index < n && formula[index] >= '0' && formula[index] <= '9' {
+		num = num*10 + int(formula[index]-'0')
+		index++
+	}
+	return num
 }
 
 func atoms(formula string) map[string]int {
 	// 总表
 	m := map[string]int{}
-	cur := 0
-	// 之前收集到的名字，历史的一部分
-	curEle := []byte{}
-	// 之前收集到的表，历史的一部分
-	preMap := map[string]int{}
-	for ; index < len(formula); index++ {
+	for index < len(formula) {
 		val := formula[index]
 		if val >= 'A' && val <= 'Z' {
-			clear(&curEle, &cur, m, &preMap)
-			curEle = []byte{val}
-		} else if val >= 'a' && val <= 'z' {
-			curEle = append(curEle, val)
-		} else if val >= '0' && val <= '9' {
-			cur = cur*10 + int(val) - '0'
+			m[parseName(formula)] += parseNum(formula)
 		} else if val == '(' {
-			clear(&curEle, &cur, m, &preMap)
 			index++
-			preMap = atoms(formula)
+			pre := atoms(formula)
+			num := parseNum(formula)
+			for k, v := range pre {
+				m[k] += v * num
+			}
 		} else if val == ')' {
+			index++
 			break
 		}
 	}
-	clear(&curEle, &cur, m, &preMap)
 	return m
 }
 
@@ -94,5 +91,5 @@ func countOfAtoms(formula string) string {
 }
 
 func main() {
-	fmt.Print(countOfAtoms("Mg(OH)2"))
+	fmt.Print(countOfAtoms("Mg2(O2(OH)3H)2"))
 }

@@ -18,19 +18,20 @@ var index int
 func decode(s string) string {
 	res := []byte{}
 	cur := 0
-	for ; index < len(s); index++ {
-		if s[index] >= 'a' && s[index] <= 'z' {
-			res = append(res, s[index])
-		} else if s[index] >= '0' && s[index] <= '9' {
-			cur = cur*10 + int(s[index]) - int('0')
-		} else if s[index] == '[' {
-			index++
+	for index < len(s) {
+		val := s[index]
+		index++
+		if val >= 'a' && val <= 'z' {
+			res = append(res, val)
+		} else if val >= '0' && val <= '9' {
+			cur = cur*10 + int(val) - int('0')
+		} else if val == '[' {
 			r := decode(s)
 			for range cur {
 				res = append(res, r...)
 			}
 			cur = 0
-		} else if s[index] == ']' {
+		} else if val == ']' {
 			break
 		}
 	}
